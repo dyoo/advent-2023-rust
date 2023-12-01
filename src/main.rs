@@ -1,3 +1,4 @@
+/// https://adventofcode.com/2023/day/1
 use aho_corasick::AhoCorasick;
 
 fn part_1(s: &str) -> i32 {
@@ -26,7 +27,7 @@ fn part_2(s: &str) -> i32 {
                 .map(|m| m.pattern().as_i32() % 9 + 1)
                 .unwrap_or(0);
             let last = ac
-                .find_iter(l)
+                .find_overlapping_iter(l)
                 .last()
                 .map(|m| m.pattern().as_i32() % 9 + 1)
                 .unwrap_or(0);
@@ -67,6 +68,11 @@ zoneight234
         ),
         281
     )
+}
+
+#[test]
+fn test_overlapping() {
+    assert_eq!(part_2("twone"), 21);
 }
 
 fn main() {
