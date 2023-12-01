@@ -4,7 +4,6 @@ fn part_1(s: &str) -> i32 {
             let s = l.chars().filter(char::is_ascii_digit).collect::<String>();
             let first_digit = s.chars().next().unwrap_or('0');
             let last_digit = s.chars().last().unwrap_or('0');
-            println!("{}, {}, {}", l, first_digit, last_digit);
             10 * (first_digit as i32 - '0' as i32) + (last_digit as i32 - '0' as i32)
         })
         .sum()
@@ -26,5 +25,6 @@ treb7uchet
 }
 
 fn main() {
-    println!("Hello, world!");
+    let input = std::fs::read_to_string("input.txt").unwrap();
+    println!("part 1: {}", part_1(&input));
 }
