@@ -31,7 +31,6 @@ fn part_2(s: &str) -> i32 {
                 .last()
                 .map(|m| m.pattern().as_i32() % 9 + 1)
                 .unwrap_or(0);
-            println!("{} {} {}", l, first, last);
             first * 10 + last
         })
         .sum()
