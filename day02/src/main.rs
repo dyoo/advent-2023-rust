@@ -89,8 +89,8 @@ fn part_1(s: &str) -> i32 {
     games.filter(is_good_game).map(|g| g.id).sum()
 }
 
-fn minimum_round(rounds: Vec<Round>) -> Round {
-    rounds.iter().fold(
+fn minimum_round<'a>(rounds: impl IntoIterator<Item = &'a Round>) -> Round {
+    rounds.into_iter().fold(
         Round {
             red: 0,
             green: 0,
@@ -107,7 +107,7 @@ fn minimum_round(rounds: Vec<Round>) -> Round {
 fn part_2(s: &str) -> i32 {
     let games = s.split('\n').filter_map(parse_game_line);
     games
-        .map(|r| minimum_round(r.rounds))
+        .map(|r| minimum_round(&r.rounds))
         .map(|r| r.red * r.green * r.blue)
         .sum()
 }
