@@ -1,3 +1,5 @@
+use std::cmp::max;
+
 #[derive(Debug, PartialEq, Eq)]
 struct Game {
     id: i32,
@@ -87,6 +89,29 @@ fn part_1(s: &str) -> i32 {
     games.filter(is_good_game).map(|g| g.id).sum()
 }
 
+fn minimum_round(rounds: Vec<Round>) -> Round {
+    rounds.iter().fold(
+        Round {
+            red: 0,
+            green: 0,
+            blue: 0,
+        },
+        |acc, r| Round {
+            red: max(acc.red, r.red),
+            green: max(acc.green, r.green),
+            blue: max(acc.blue, r.blue),
+        },
+    )
+}
+
+fn part_2(s: &str) -> i32 {
+    let games = s.split('\n').filter_map(parse_game_line);
+    games
+        .map(|r| minimum_round(r.rounds))
+        .map(|r| r.red * r.green * r.blue)
+        .sum()
+}
+
 #[test]
 fn test_part_1() {
     let input = "
@@ -99,7 +124,20 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     assert_eq!(part_1(input), 8);
 }
 
+#[test]
+fn test_part_2() {
+    let input = "
+Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+";
+    assert_eq!(part_2(input), 2286);
+}
+
 fn main() {
     let input = std::fs::read_to_string("input.txt").expect("input.txt");
     println!("Part 1: {}", part_1(&input));
+    println!("Part 2: {}", part_2(&input));
 }
