@@ -107,7 +107,7 @@ fn part_1(s: &str) -> i32 {
 
 #[test]
 fn test_part_1() {
-    let input ="\
+    let input = "\
 467..114..
 ...*......
 ..35..633.
@@ -119,11 +119,47 @@ fn test_part_1() {
 ...$.*....
 .664.598..
 ";
-    assert_eq!(part_1(input),
-	       4361);
+    assert_eq!(part_1(input), 4361);
+}
+
+fn part_2(s: &str) -> i32 {
+    let nums = find_all_numbers(s);
+    let mut total_sum = 0;
+    for (y, line) in s.lines().enumerate() {
+        for (x, ch) in line.chars().enumerate() {
+            if ch == '*' {
+                let adjacent_nums: Vec<&Number> = nums
+                    .iter()
+                    .filter(|n| n.is_adjacent_to(y as i32, x as i32))
+                    .collect();
+                if adjacent_nums.len() == 2 {
+                    total_sum += adjacent_nums.into_iter().map(|n| n.value).product::<i32>();
+                }
+            }
+        }
+    }
+    total_sum
+}
+
+#[test]
+fn test_part_2() {
+    let input = "\
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
+";
+    assert_eq!(part_2(input), 467835);
 }
 
 fn main() {
     let input = std::fs::read_to_string("input.txt").unwrap();
     println!("part 1: {}", part_1(&input));
+    println!("part 2: {}", part_2(&input));
 }
