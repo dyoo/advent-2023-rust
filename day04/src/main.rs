@@ -19,8 +19,8 @@ impl Card {
 fn parse_cards(s: &str) -> Vec<Card> {
     s.lines()
         .filter_map(|line| {
-            let (lhs, rhs) = line.split_once("|")?;
-            let (_, winning) = lhs.split_once(":")?;
+            let (lhs, rhs) = line.split_once('|')?;
+            let (_, winning) = lhs.split_once(':')?;
             let winning = winning
                 .split_whitespace()
                 .filter_map(|s| s.parse::<i32>().ok())
@@ -48,7 +48,7 @@ fn part_1(s: &str) -> i32 {
             if winning_count == 0 {
                 0
             } else {
-                2i32.pow(winning_count as u32 - 1) as i32
+                2i32.pow(winning_count as u32 - 1)
             }
         })
         .sum::<i32>()
@@ -56,7 +56,7 @@ fn part_1(s: &str) -> i32 {
 
 fn part_2(s: &str) -> i32 {
     let cards = parse_cards(s);
-    let mut inventory: Vec<i32> = (0..cards.len()).map(|_| 1).collect();
+    let mut inventory: Vec<i32> = vec![1; cards.len()];
     for i in 0..inventory.len() {
         let card = &cards[i];
         let multiplier = inventory[i];
