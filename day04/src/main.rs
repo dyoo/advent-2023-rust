@@ -1,24 +1,52 @@
 use std::collections::HashSet;
 
-fn part_1(s: &str) -> i32 {
-    s.lines().filter_map(count_wins).sum()
+#[derive(Debug, PartialEq, Eq)]
+struct Card {
+    id: i32,
+    winning: HashSet<i32>,
+    holdings: Vec<i32>,
 }
 
-fn count_wins(s: &str) -> Option<i32> {
-    let (lhs, rhs) = s.split_once("|")?;
-    let (_, winning) = lhs.split_once(":")?;
-    let winning = winning
-        .split_whitespace()
-        .filter_map(|s| s.parse::<i32>().ok())
-        .collect::<HashSet<i32>>();
-    let scores = rhs.split_whitespace().filter_map(|s| s.parse::<i32>().ok());
-    let winning_count = scores.filter(|s| winning.contains(s)).count() as u32;
+fn parse_cards(s: &str) -> Vec<Card> {
+    s.lines()
+        .filter_map(|line| {
+            let (lhs, rhs) = line.split_once("|")?;
+            let (_, winning) = lhs.split_once(":")?;
+            let winning = winning
+                .split_whitespace()
+                .filter_map(|s| s.parse::<i32>().ok())
+                .collect::<HashSet<i32>>();
+            let holdings = rhs
+                .split_whitespace()
+                .filter_map(|s| s.parse::<i32>().ok())
+                .collect::<Vec<i32>>();
 
-    if winning_count == 0 {
-        Some(0)
-    } else {
-        Some(2i32.pow(winning_count - 1))
-    }
+            Some(Card {
+                id: 0,
+                winning,
+                holdings,
+            })
+        })
+        .collect()
+}
+
+fn part_1(s: &str) -> i32 {
+    let cards = parse_cards(s);
+    cards
+        .iter()
+        .map(|card| {
+            let winning_count = card
+                .holdings
+                .iter()
+                .filter(|h| card.winning.contains(h))
+                .count() as i32;
+            if winning_count == 0 {
+                0
+            } else {
+                2i32.pow(winning_count as u32 - 1) as i32
+            }
+        })
+        .sum::<i32>()
 }
 
 #[test]
@@ -37,4 +65,5 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 fn main() {
     let input = std::fs::read_to_string("input.txt").expect("input");
     println!("Part 1: {}", part_1(&input));
+    println!("{}", 1 + 2 + 4 + 8 + 14 + 1);
 }
